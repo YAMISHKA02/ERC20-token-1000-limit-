@@ -58,13 +58,13 @@ describe("Token testing", async () => {
 
     describe("Check 1000 tokens limit by account", async () => {
         it("Can't be transferred if limit reaches", async () => {
-            // fixme
-            let balanceOwner = await token.balanceOf(deployer.address)
             let balanceUser1 = await token.balanceOf(user1.address)
-            let allBalance = balanceOwner.add(balanceUser1)
+            let balanceUser2 = await token.balanceOf(user2.address)
+            let allBalance = balanceUser2.add(balanceUser1)
             expect(allBalance).gt(decimals.mul(1000))
-            await expect(token.transfer(user1.address, allBalance))
-                .to.be.revertedWith('More 1000 tokens on address after transaction')
+            await expect(token.connect(user1).transfer(user2.address, balanceUser1))
+                .to.be.revertedWith("Balance will reach its limit of 1000 tokens when it comes to the address")
+            
         })
     })
 })
